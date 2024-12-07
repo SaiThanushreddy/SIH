@@ -13,7 +13,7 @@ model User {
   name      String?
   password  String?  @unique // For Google Login
   createdAt DateTime @default(now())
-  orders    Order[]
+
 }
 
 model Product {
@@ -25,18 +25,17 @@ model Product {
   stock       Int             // Number of items in stock
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-  orderItems  OrderProduct[]  // Add this to define the reverse relation
+  orderItems  OrderProduct[] 
 }
 
 model Order {
   id            String   @id @default(cuid())
   userId        String
-  user          User     @relation(fields: [userId], references: [id])
-  products      OrderProduct[]
+  products      Json
   totalAmount   Float
-  status        OrderStatus @default(PENDING) // PENDING, COMPLETED, CANCELED
-  pickupPoint   String      // Hardcoded pickup point
-  createdAt     DateTime    @default(now())
+  status        String
+  pickupPoint   String      
+ 
 }
 
 
@@ -45,7 +44,7 @@ model OrderProduct {
   orderId    String
   productId  String
   quantity   Int
-  order      Order    @relation(fields: [orderId], references: [id])
+  price      Float    
   product    Product  @relation(fields: [productId], references: [id])
 }
 

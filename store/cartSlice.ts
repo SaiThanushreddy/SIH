@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 // Initial state with some example items
 const initialState = {
   items: [
-    { productId: '1', name: 'Product 1', price: 25, quantity: 1 },
-    { productId: '2', name: 'Product 2', price: 50, quantity: 2 },
+    { productId: '1', name: 'Cocaine', price: 25, quantity: 1 },
+    { productId: '2', name: 'LSD', price: 50, quantity: 2 },
   ],
 };
 

@@ -1,16 +1,66 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getPickupPoints } from '../../utils/pickupUtils'
 
 export default function Checkout() {
   const [selectedPickupPoint, setSelectedPickupPoint] = useState('')
-  const pickupPoints = getPickupPoints()
+  const [isLoading, setIsLoading] = useState(false)
+  const [pickupPoints, setPickupPoints] = useState<any[]>([])
+  const [products, setProducts] = useState<any[]>([
+    { productId: 'prod123', quantity: 1 }, 
+  ])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchPickupPoints = async () => {
+      const points = await getPickupPoints()
+      setPickupPoints(points)
+    }
+    fetchPickupPoints()
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-   
-    console.log('Order submitted with pickup point:', selectedPickupPoint)
+
+    if (!selectedPickupPoint) {
+      alert('Please select a pickup point')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/place-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pickupPoint: "Delhi",
+          userId: "user123", 
+          products: products,
+          totalAmount: 100,
+        }),
+      })
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Order placed successfully!');
+        console.log(data);
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('An unexpected error occurred.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const calculateTotalAmount = (products: any[]) => {
+    return products.reduce((total, product) => total + (product.price * product.quantity), 0)
   }
 
   return (
@@ -32,8 +82,8 @@ export default function Checkout() {
             ))}
           </select>
         </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Place Order (Cash on Delivery)
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded" disabled={isLoading}>
+          {isLoading ? 'Placing Order...' : 'Place Order (Cash on Delivery)'}
         </button>
       </form>
     </div>
