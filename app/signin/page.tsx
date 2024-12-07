@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation'; // Import the useRouter hook
 import { login } from '../../store/userSlice'; 
 
 export default function SignInPage() {
@@ -10,6 +11,7 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const router = useRouter(); // Initialize the router
 
   const handleSignIn = async () => {
     setError(null);
@@ -26,9 +28,15 @@ export default function SignInPage() {
 
       const data = await response.json();
 
+      console.log(data);
       if (response.ok) {
         dispatch(login({ email, name: data.name }));
-        setSuccess(`Welcome back, ${data.name}!`);
+        setSuccess(data.message);
+
+        // Redirect to the home page after a short delay
+        setTimeout(() => {
+          router.push('/'); // Navigate to the home page
+        }, 1000);
       } else {
         setError(data.error);  
       }

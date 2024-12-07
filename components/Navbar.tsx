@@ -1,52 +1,60 @@
-'use client';
+'use client'
 
-import { useSelector } from 'react-redux';
-import Link from 'next/link';
-import { FaShoppingCart } from 'react-icons/fa'; // Optional, if you want a cart icon
+import { useSelector } from 'react-redux'
+import Link from 'next/link'
+import { FaShoppingCart, FaUser } from 'react-icons/fa'
+import { motion } from 'framer-motion'
 
 export default function Navbar() {
-  // Access the user and cart state from Redux store
-  const user = useSelector((state: any) => state.user);
-  const cart = useSelector((state: any) => state.cart); // Assuming the cart is in the Redux store
+  const user = useSelector((state: any) => state.user)
+  const cart = useSelector((state: any) => state.cart)
 
-  // Get the total number of items in the cart
-  const cartItemCount = cart.items.reduce((acc: number, item: any) => acc + item.quantity, 0);
+  const cartItemCount = cart.items.reduce((acc: number, item: any) => acc + item.quantity, 0)
 
+  console.log(user)
   return (
-    <nav className="bg-gray-800 text-white p-4 shadow-md">
+    <nav className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo / Store Name */}
-        <Link href="/" className="text-xl font-bold text-white hover:text-gray-300">
-          E-commerce Store
+        <Link href="/" className="text-2xl font-bold text-white hover:text-gray-200 transition-colors duration-300">
+          ShopSmart
         </Link>
 
-        <div className="flex items-center space-x-4">
-          {/* Conditional Rendering: If user is logged in */}
+        <div className="flex items-center space-x-6">
           {user.isLoggedIn ? (
-            <span className="mr-4 text-sm text-gray-300">Welcome, {user.name}!</span>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center space-x-2 cursor-pointer"
+            >
+              <FaUser className="text-gray-300" />
+              <span className="text-sm font-medium text-gray-300">Welcome, {user.email}!</span>
+            </motion.div>
           ) : (
             <>
-              <Link href="/signin" className="text-sm text-gray-300 hover:text-white">Sign In</Link>
-              <Link href="/signup" className="text-sm text-gray-300 hover:text-white">Sign Up</Link>
+              <Link href="/signin" className="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-300">Sign In</Link>
+              <Link href="/signup" className="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-300">Sign Up</Link>
             </>
           )}
 
-          {/* Cart Link with item count */}
-          <Link href="/cart" className="flex items-center text-sm text-gray-300 hover:text-white">
-            <FaShoppingCart className="mr-2" />
-            {cartItemCount > 0 && (
-              <span className="bg-red-500 text-white rounded-full px-2 text-xs">
-                {cartItemCount}
-              </span>
-            )}
+          <Link href="/cart" className="relative group">
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              className="flex items-center text-gray-300 group-hover:text-white transition-colors duration-300"
+            >
+              <FaShoppingCart className="text-2xl" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </motion.div>
           </Link>
 
-          {/* Checkout Link */}
-          <Link href="/checkout" className="text-sm text-gray-300 hover:text-white">
+          <Link href="/checkout" className="text-sm font-medium bg-white text-blue-600 px-4 py-2 rounded-full hover:bg-gray-100 transition-colors duration-300">
             Checkout
           </Link>
         </div>
       </div>
     </nav>
-  );
+  )
 }
+

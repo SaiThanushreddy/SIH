@@ -21,8 +21,8 @@ model Product {
   name        String
   description String
   price       Float
-  imageUrl    String          // URL to the product image
-  stock       Int             // Number of items in stock
+  imageUrl    String          
+  stock       Int             
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   orderItems  OrderProduct[] 
@@ -47,6 +47,12 @@ model OrderProduct {
   price      Float    
   product    Product  @relation(fields: [productId], references: [id])
 }
+model VisitorIP {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  createdAt DateTime @default(now())
+}
+
 
 enum OrderStatus {
   PENDING

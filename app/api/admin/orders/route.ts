@@ -5,14 +5,14 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    // Fetch all orders from the database
+    // Fetch all orders and IPs from the database
     const orders = await prisma.order.findMany();
+    const ips = await prisma.visitorIP.findMany();
 
-    // Return the orders in the response
-    return NextResponse.json({ orders }, { status: 200 });
+    return NextResponse.json({ orders, ips }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching orders:', error);
-    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 });
+    console.error('Error fetching data:', error);
+    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
