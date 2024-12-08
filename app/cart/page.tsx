@@ -10,7 +10,9 @@ export default function CartPage() {
   const cart = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
 
-  const handleRemoveFromCart = (productId: string) => {
+  console.log(cart)
+  const handleRemoveFromCart = (productId: string) => {4
+    console.log(productId)
     dispatch(removeFromCart({ productId }));
   };
 
@@ -69,7 +71,7 @@ export default function CartPage() {
                       className="border-b"
                     >
                       <td className="px-4 py-4">{item.name}</td>
-                      <td className="px-4 py-4">${item.price.toFixed(2)}</td>
+                      <td className="px-4 py-4">${item.price}</td>
                       <td className="px-4 py-4">
                         <div className="flex items-center space-x-2">
                           <button

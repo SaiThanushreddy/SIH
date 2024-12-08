@@ -1,12 +1,21 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { getProductById } from '../../../utils/productUtils'
 import AddToCartButton from '../../../components/AddToCartButton'
 
 export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = getProductById(params.id)
+  const [product, setProduct] = useState<any | null>(null)
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const fetchedProduct = await getProductById(params.id)
+      setProduct(fetchedProduct)
+    }
+    fetchProduct()
+  }, [params.id])
 
   if (!product) {
-    return <div>Product not found</div>
+    return <div>Loading...</div>
   }
 
   return (
@@ -18,9 +27,13 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
         <p className="text-xl mb-4">${product.price.toFixed(2)}</p>
         <p className="mb-4">{product.description}</p>
-        <AddToCartButton productId={product.id} />
+        <AddToCartButton
+          productId={product.id}
+          productName={product.name}
+          productPrice={product.price}
+          productDescription={product.description}
+        />
       </div>
     </div>
   )
 }
-
